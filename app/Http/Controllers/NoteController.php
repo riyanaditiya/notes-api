@@ -69,4 +69,37 @@ class NoteController extends Controller
 
         return $this->success([], 'Note deleted successfully');
     }
+
+    public function trashed(Request $request)
+    {
+        $notes = $this->noteService->listTrashedNotes(Auth::id(), $request->get('per_page', 10));
+
+        return $this->success($notes, 'Trashed notes retrieved successfully');
+    }
+
+    public function restore($id)
+    {
+        $note = $this->noteService->getTrashedNote($id, Auth::id());
+
+        if (! $note) {
+            return $this->error('Note not found', 404);
+        }
+
+        $note = $this->noteService->restoreNote($note);
+
+        return $this->success($note, 'Note restored successfully');
+    }
+
+    public function forceDelete($id)
+    {
+        $note = $this->noteService->getTrashedNote($id, Auth::id());
+
+        if (! $note) {
+            return $this->error('Note not found', 404);
+        }
+
+        $this->noteService->forceDeleteNote($note);
+
+        return $this->success([], 'Note permanently deleted');
+    }
 }

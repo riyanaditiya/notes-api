@@ -41,4 +41,31 @@ class NoteRepository
     {
         return $note->delete();
     }
+
+    public function findTrashedByIdAndUser(int $id, int $userId)
+    {
+        return Note::onlyTrashed()
+            ->where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+    }
+
+     public function getAllTrashedByUser(int $userId, int $perPage)
+    {
+        return Note::onlyTrashed()
+            ->where('user_id', $userId)
+            ->latest()
+            ->paginate($perPage);
+    }
+
+    public function restore($note)
+    {
+        $note->restore();
+        return $note;
+    }
+
+    public function forceDelete($note)
+    {
+        return $note->forceDelete();
+    }
 }

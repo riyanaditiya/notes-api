@@ -20,4 +20,9 @@ Route::middleware('auth:api')->group(function () {
 
     // Notes CRUD
     Route::apiResource('notes', NoteController::class);
+
+    // Soft Delete
+    Route::get('/notes-trashed', [NoteController::class, 'trashed']);
+    Route::patch('/notes/{id}/restore', [NoteController::class, 'restore']);
+    Route::delete('/notes/{id}/force-delete', [NoteController::class, 'forceDelete']);
 });

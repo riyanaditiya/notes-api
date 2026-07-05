@@ -38,4 +38,24 @@ class NoteService
     {
         return $this->noteRepository->delete($note);
     }
+
+    public function getTrashedNote(int $id, int $userId)
+    {
+        return $this->noteRepository->findTrashedByIdAndUser($id, $userId);
+    }
+
+    public function listTrashedNotes(int $userId, int $perPage = 10)
+    {
+        return $this->noteRepository->getAllTrashedByUser($userId, $perPage);
+    }
+
+    public function restoreNote($note)
+    {
+        return $this->noteRepository->restore($note);
+    }
+
+    public function forceDeleteNote($note)
+    {
+        return $this->noteRepository->forceDelete($note);
+    }
 }
