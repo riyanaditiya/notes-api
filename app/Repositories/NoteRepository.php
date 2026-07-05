@@ -18,6 +18,10 @@ class NoteRepository
             $query->where('status', $filters['status']);
         }
 
+        if (isset($filters['is_favorite'])) {  
+            $query->where('is_favorite', filter_var($filters['is_favorite'], FILTER_VALIDATE_BOOLEAN));
+        }
+
         return $query->latest()->paginate($perPage);
     }
 

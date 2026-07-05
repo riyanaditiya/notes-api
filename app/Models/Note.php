@@ -10,7 +10,7 @@ class Note extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'title', 'content', 'status'];
+    protected $fillable = ['user_id', 'title', 'content', 'status', 'is_favorite'];
 
     public function user()
     {

@@ -20,7 +20,7 @@ class NoteController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only('search', 'status');
+        $filters = $request->only('search', 'status', 'is_favorite');
         $notes = $this->noteService->listNotes(Auth::id(), $filters, $request->get('per_page', 10));
 
         return $this->success($notes, 'Notes retrieved successfully');
@@ -101,5 +101,18 @@ class NoteController extends Controller
         $this->noteService->forceDeleteNote($note);
 
         return $this->success([], 'Note permanently deleted');
+    }
+
+    public function toggleFavorite($id)
+    {
+        $note = $this->noteService->getNote($id, Auth::id());
+
+        if (! $note) {
+            return $this->error('Note not found', 404);
+        }
+
+        $note = $this->noteService->toggleFavorite($note);
+
+        return $this->success($note, 'Favorite status updated successfully');
     }
 }

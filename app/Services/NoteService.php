@@ -58,4 +58,10 @@ class NoteService
     {
         return $this->noteRepository->forceDelete($note);
     }
+
+    public function toggleFavorite($note)
+    {
+        $note->update(['is_favorite' => ! $note->is_favorite]);
+        return $note;
+    }
 }

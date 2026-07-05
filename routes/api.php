@@ -25,4 +25,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/notes-trashed', [NoteController::class, 'trashed']);
     Route::patch('/notes/{id}/restore', [NoteController::class, 'restore']);
     Route::delete('/notes/{id}/force-delete', [NoteController::class, 'forceDelete']);
+
+    Route::patch('/notes/{id}/favorite', [NoteController::class, 'toggleFavorite']);
 });
