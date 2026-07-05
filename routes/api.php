@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\NoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     // Notes CRUD
-    // Route::apiResource('notes', NoteController::class);
+    Route::apiResource('notes', NoteController::class);
 });
