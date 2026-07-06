@@ -25,6 +25,7 @@ class NoteService
     {
         $data['user_id'] = $userId;
         $data['status'] = $data['status'] ?? 'active';
+        $data['is_favorite'] = $data['is_favorite'] ?? false;
 
         return $this->noteRepository->create($data);
     }
