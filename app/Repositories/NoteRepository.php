@@ -22,6 +22,10 @@ class NoteRepository
             $query->where('is_favorite', filter_var($filters['is_favorite'], FILTER_VALIDATE_BOOLEAN));
         }
 
+        if (! empty($filters['category_id'])) {
+            $query->where('category_id', $filters['category_id']);
+        }
+
         return $query->latest()->paginate($perPage);
     }
 

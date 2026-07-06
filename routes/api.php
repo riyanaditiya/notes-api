@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\NoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,4 +28,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/notes/{id}/force-delete', [NoteController::class, 'forceDelete']);
 
     Route::patch('/notes/{id}/favorite', [NoteController::class, 'toggleFavorite']);
+
+    // Category CRUD
+    Route::apiResource('categories', CategoryController::class);
 });

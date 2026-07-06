@@ -26,6 +26,7 @@ class UpdateNoteRequest extends FormRequest
             'title'   => 'sometimes|required|string|max:255',
             'content' => 'sometimes|required|string',
             'status'  => 'sometimes|in:active,archived',
+            'category_id' => 'sometimes|nullable|exists:categories,id'
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreNoteRequest extends FormRequest
+class StoreCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,7 @@ class StoreNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'   => 'required|string|max:255',
-            'content' => 'required|string',
-            'status'  => 'sometimes|in:active,archived',
-            'category_id' => 'sometimes|nullable|exists:categories,id'
+            'name' => 'required|string|max:255',
         ];
     }
 }

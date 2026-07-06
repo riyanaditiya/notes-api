@@ -20,7 +20,7 @@ class NoteController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only('search', 'status', 'is_favorite');
+        $filters = $request->only('search', 'status', 'is_favorite', 'category_id');
         $notes = $this->noteService->listNotes(Auth::id(), $filters, $request->get('per_page', 10));
 
         return $this->success($notes, 'Notes retrieved successfully');
