@@ -8,7 +8,7 @@ class NoteRepository
 {
     public function getAllByUser(int $userId, array $filters, int $perPage)
     {
-        $query = Note::where('user_id', $userId);
+        $query = Note::with(['category', 'tags'])->where('user_id', $userId);
 
         if (! empty($filters['search'])) {
             $query->where('title', 'like', '%' . $filters['search'] . '%');
@@ -31,7 +31,7 @@ class NoteRepository
 
     public function findByIdAndUser(int $id, int $userId)
     {
-        return Note::where('id', $id)->where('user_id', $userId)->first();
+        return Note::with(['category', 'tags'])->where('id', $id)->where('user_id', $userId)->first();
     }
 
     public function create(array $data)

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use App\Services\NoteService;
+use App\Services\TagService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +15,10 @@ class NoteController extends Controller
 {
     use ApiResponse;
 
-    public function __construct(protected NoteService $noteService)
-    {
+    public function __construct(
+        protected NoteService $noteService,
+        protected TagService $tagService
+        ){
     }
 
     public function index(Request $request)
@@ -30,7 +33,11 @@ class NoteController extends Controller
     {
         $note = $this->noteService->createNote(Auth::id(), $request->validated());
 
-        return $this->success($note, 'Note created successfully', 201);
+        if($request->has('tags')){
+            $note = $this->tagService->syncNoteTags($note, $request->tags);
+        }
+
+        return $this->success($note->load('tags'), 'Note created successfully', 201);
     }
 
     public function show($id)
@@ -54,7 +61,11 @@ class NoteController extends Controller
 
         $note = $this->noteService->updateNote($note, $request->validated());
 
-        return $this->success($note, 'Note updated successfully');
+        if($request->has('tags')){
+            $note = $this->tagService->syncNoteTags($note, $request->tags);
+        }
+
+        return $this->success($note->load('tags'), 'Note updated successfully');
     }
 
     public function destroy($id)

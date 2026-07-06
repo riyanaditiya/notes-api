@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\NoteController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\NoteController;
+use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Category CRUD
     Route::apiResource('categories', CategoryController::class);
+
+    // Tags
+    Route::apiResource('tags', TagController::class)->only(['index', 'store', 'destroy']);
 });
