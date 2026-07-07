@@ -14,7 +14,7 @@ use OpenApi\Attributes as OA;
     description: "Local development"
 )]
 #[OA\Server(
-    url: "https://notes-api-production.up.railway.app/api",
+    url: "https://notes-api-production-4a37.up.railway.app/",
     description: "Production"
 )]
 #[OA\SecurityScheme(
