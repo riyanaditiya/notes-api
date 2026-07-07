@@ -1,49 +1,51 @@
 # Notes Management System API
 
-REST API untuk Notes Management System Api dengan autentikasi JWT, dibangun menggunakan Laravel.
+REST API untuk Notes Management System dengan autentikasi JWT, dibangun menggunakan Laravel.
 
 ## Tech Stack
 
-- **Framework**: Laravel 13
-- **Database**: MySQL
-- **Authentication**: JWT (tymon/jwt-auth)
-- **Architecture**: Layered Architecture (Controller → Service → Repository)
+- Framework: Laravel 13
+- Database: MySQL
+- Authentication: JWT (tymon/jwt-auth)
+- Architecture: Layered Architecture (Controller, Service, Repository)
 
 ## Fitur
 
-### Wajib
+Fitur wajib:
+
 - Register, Login, Logout dengan JWT Authentication
 - CRUD Notes (Create, Read, Update, Delete)
 - Pagination, Search by title, Filter by status
 - User hanya dapat mengakses data miliknya sendiri
-- Validasi input & password hashing
+- Validasi input dan password hashing
 - Response format konsisten
 
-### Nilai Tambah
-- Layered Architecture (Repository Pattern + Service Layer)
+Nilai tambah:
+
+- Layered Architecture (Repository Pattern dan Service Layer)
 - Soft Delete Notes (trash, restore, force delete)
-- Favorite Notes (toggle & filter)
-- Note Categories (1 note = 1 kategori)
-- Note Tags (many-to-many, 1 note bisa banyak tag)
+- Favorite Notes (toggle dan filter)
+- Note Categories (satu note memiliki satu kategori)
+- Note Tags (relasi many-to-many, satu note dapat memiliki banyak tag)
 - Feature Testing (PHPUnit)
-- Dokumentasi lengkap (README, Postman, OpenAPI/Swagger)
+- Dokumentasi lengkap (README, Postman Collection, OpenAPI/Swagger)
 
 ## Cara Menjalankan Aplikasi
 
-### 1. Clone repository
+1. Clone repository
 
 ```bash
-git clone https://github.com/riyanaditiya/notes-api.git
+git clone https://github.com/username-kamu/notes-api.git
 cd notes-api
 ```
 
-### 2. Install dependency
+2. Install dependency
 
 ```bash
 composer install
 ```
 
-### 3. Setup environment
+3. Setup environment
 
 ```bash
 cp .env.example .env
@@ -61,29 +63,29 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 4. Generate JWT secret
+4. Generate JWT secret
 
 ```bash
 php artisan jwt:secret
 ```
 
-### 5. Migrasi database
+5. Migrasi database
 
 ```bash
 php artisan migrate
 ```
 
-### 6. Jalankan server
+6. Jalankan server
 
 ```bash
 php artisan serve
 ```
 
-Aplikasi berjalan di `http://localhost:8000`
+Aplikasi berjalan di `http://localhost:8000`.
 
-### 7. Menjalankan Test
+7. Menjalankan test
 
-Testing menggunakan SQLite in-memory terpisah, tidak akan mengganggu database MySQL utama (sudah dikonfigurasi di `phpunit.xml`).
+Testing menggunakan SQLite in-memory yang terpisah dari database utama, sudah dikonfigurasi di `phpunit.xml`.
 
 ```bash
 php artisan test
@@ -95,11 +97,12 @@ php artisan test
 app/
   Http/
     Controllers/Api/
+      SwaggerInfo.php
       AuthController.php
       NoteController.php
       CategoryController.php
       TagController.php
-    Requests/           
+    Requests/
       LoginRequest.php
       RegisterRequest.php
       StoreCategoryRequest.php
@@ -111,31 +114,33 @@ app/
     Note.php
     Category.php
     Tag.php
-  Repositories/         -
-    CategoryRepository.php 
-    NoteRepository.php 
+  Repositories/
+    CategoryRepository.php
+    NoteRepository.php
     TagRepository.php
-  Services/              
+  Services/
     CategoryService.php
     NoteService.php
     TagService.php
   Traits/
-    ApiResponse.php     
+    ApiResponse.php
 routes/
-  api.php               
+  api.php
 database/
-  migrations/           -> Migration users, notes, categories, tags, note_tag
+  migrations/
 tests/
   Feature/
-    NoteApiTest.php     
-schema.sql              
-postman_collection.json 
-openapi.yaml            
+    NoteApiTest.php
+NOTES API.postman_collection.json
+schema.sql
 ```
 
 ## API Documentation
 
-Format response konsisten di semua endpoint:
+Base URL (local): `http://localhost:8000/api`
+Base URL (production): `https://notes-api-production-4a37.up.railway.app/`
+
+Semua response menggunakan format berikut:
 
 ```json
 {
@@ -147,45 +152,47 @@ Format response konsisten di semua endpoint:
 
 ### Authentication
 
-| Method | Endpoint | Auth | Deskripsi |
+| Method | Endpoint | Autentikasi | Deskripsi |
 |---|---|---|---|
-| POST | `/api/register` | ❌ | Register user baru |
-| POST | `/api/login` | ❌ | Login, mendapatkan JWT token |
-| POST | `/api/logout` | ✅ | Logout, invalidate token |
-| GET | `/api/me` | ✅ | Info user yang sedang login |
+| POST | /register | Tidak | Register user baru |
+| POST | /login | Tidak | Login, mendapatkan JWT token |
+| POST | /logout | Ya | Logout, invalidate token |
+| GET | /me | Ya | Info user yang sedang login |
 
-Semua endpoint yang butuh autentikasi wajib menyertakan header:
+Endpoint yang membutuhkan autentikasi wajib menyertakan header berikut:
+
 ```
 Authorization: Bearer <token>
 ```
 
 ### Notes
 
-| Method | Endpoint | Auth | Deskripsi |
+| Method | Endpoint | Autentikasi | Deskripsi |
 |---|---|---|---|
-| GET | `/api/notes` | ✅ | List notes (pagination, search, filter) |
-| POST | `/api/notes` | ✅ | Buat note baru |
-| GET | `/api/notes/{id}` | ✅ | Detail note |
-| PUT/PATCH | `/api/notes/{id}` | ✅ | Update note |
-| DELETE | `/api/notes/{id}` | ✅ | Soft delete note |
-| GET | `/api/notes-trashed` | ✅ | List note yang sudah dihapus |
-| PATCH | `/api/notes/{id}/restore` | ✅ | Kembalikan note dari trash |
-| DELETE | `/api/notes/{id}/force-delete` | ✅ | Hapus permanen |
-| PATCH | `/api/notes/{id}/favorite` | ✅ | Toggle status favorite |
+| GET | /notes | Ya | List notes dengan pagination, search, dan filter |
+| POST | /notes | Ya | Membuat note baru |
+| GET | /notes/{id} | Ya | Melihat detail note |
+| PUT/PATCH | /notes/{id} | Ya | Memperbarui note |
+| DELETE | /notes/{id} | Ya | Menghapus note (soft delete) |
+| GET | /notes-trashed | Ya | List note yang sudah dihapus |
+| PATCH | /notes/{id}/restore | Ya | Mengembalikan note dari trash |
+| DELETE | /notes/{id}/force-delete | Ya | Menghapus note secara permanen |
+| PATCH | /notes/{id}/favorite | Ya | Mengubah status favorite pada note |
 
-**Query Parameters untuk `GET /api/notes`**
+Query parameter untuk `GET /notes`:
 
-| Param | Tipe | Deskripsi |
+| Parameter | Tipe | Deskripsi |
 |---|---|---|
-| `search` | string | Cari berdasarkan title |
-| `status` | string | Filter: `active` atau `archived` |
-| `is_favorite` | boolean | Filter: `true` atau `false` |
-| `category_id` | integer | Filter berdasarkan kategori |
-| `per_page` | integer | Jumlah data per halaman (default 10) |
+| search | string | Mencari note berdasarkan title |
+| status | string | Filter berdasarkan status: active atau archived |
+| is_favorite | boolean | Filter berdasarkan status favorite |
+| category_id | integer | Filter berdasarkan kategori |
+| per_page | integer | Jumlah data per halaman, default 10 |
 
-**Contoh Request Create Note (dengan category & tags)**
+Contoh request membuat note dengan kategori dan tag:
+
 ```json
-POST /api/notes
+POST /notes
 {
   "title": "Meeting dengan klien",
   "content": "Bahas kontrak baru",
@@ -194,7 +201,8 @@ POST /api/notes
 }
 ```
 
-**Contoh Response**
+Contoh response:
+
 ```json
 {
   "status": "Success",
@@ -220,27 +228,27 @@ POST /api/notes
 
 ### Categories
 
-| Method | Endpoint | Auth | Deskripsi |
+| Method | Endpoint | Autentikasi | Deskripsi |
 |---|---|---|---|
-| GET | `/api/categories` | ✅ | List semua kategori milik user |
-| POST | `/api/categories` | ✅ | Buat kategori baru |
-| GET | `/api/categories/{id}` | ✅ | Detail kategori |
-| PUT/PATCH | `/api/categories/{id}` | ✅ | Update kategori |
-| DELETE | `/api/categories/{id}` | ✅ | Hapus kategori |
+| GET | /categories | Ya | List semua kategori milik user |
+| POST | /categories | Ya | Membuat kategori baru |
+| GET | /categories/{id} | Ya | Melihat detail kategori |
+| PUT/PATCH | /categories/{id} | Ya | Memperbarui kategori |
+| DELETE | /categories/{id} | Ya | Menghapus kategori |
 
 ### Tags
 
-| Method | Endpoint | Auth | Deskripsi |
+| Method | Endpoint | Autentikasi | Deskripsi |
 |---|---|---|---|
-| GET | `/api/tags` | ✅ | List semua tag milik user |
-| POST | `/api/tags` | ✅ | Buat tag baru |
-| DELETE | `/api/tags/{id}` | ✅ | Hapus tag |
+| GET | /tags | Ya | List semua tag milik user |
+| POST | /tags | Ya | Membuat tag baru |
+| DELETE | /tags/{id} | Ya | Menghapus tag |
 
-Tags di-assign ke note lewat parameter `tags` (array of tag_id) saat `POST /api/notes` atau `PUT /api/notes/{id}` — menggunakan mekanisme sync (mengganti seluruh tag note dengan array yang dikirim).
+Tag di-assign ke note melalui parameter `tags` (array berisi tag_id) saat membuat atau memperbarui note. Mekanisme ini menggunakan sync, artinya seluruh tag pada note akan digantikan dengan array yang dikirim.
 
 ## Testing
 
-Feature test tersedia di `tests/Feature/NoteApiTest.php`, mencakup Create, Read, Update, Delete Note beserta validasi dan keamanan akses data.
+Feature test tersedia di `tests/Feature/NoteApiTest.php`, mencakup pengujian Create, Read, Update, Delete Note, validasi input, dan keamanan akses antar user.
 
 ```bash
 php artisan test
@@ -248,26 +256,34 @@ php artisan test
 
 ## Postman Collection
 
-Import file `postman_collection.json` ke Postman untuk mencoba semua endpoint secara langsung.
+File `NOTES API.postman_collection.json` dapat langsung diimport ke Postman.
 
-1. Buat Environment baru dengan variable `base_url` = `http://localhost:8000/api`
-2. Jalankan request **Login**, token akan otomatis tersimpan ke variable `{{token}}`
-3. Semua request lain otomatis menggunakan token tersebut
+1. Buat Environment baru dengan variable `base_url` bernilai `http://localhost:8000/api` untuk local, dan `https://notes-api-production-4a37.up.railway.app/` untuk production, kemudian buat variable `token` dan kosongkan nilainya 
+2. Jalankan request Login, token akan otomatis tersimpan ke variable `token`
+3. Seluruh request lain akan otomatis menggunakan token tersebut
 
 ## Swagger / OpenAPI
 
-Spesifikasi API tersedia di `openapi.yaml`. Bisa dibuka menggunakan [Swagger Editor](https://editor.swagger.io) untuk melihat dokumentasi interaktif.
+Dokumentasi API dibuat menggunakan PHP Attributes (package darkaonline/l5-swagger) yang ditulis langsung di setiap Controller. Dokumentasi di-generate otomatis dari kode tersebut.
+
+Generate dokumentasi:
+
+```bash
+php artisan l5-swagger:generate
+```
+
+Setelah server berjalan, dokumentasi interaktif dapat diakses di:
+
+```
+http://localhost:8000/api/documentation
+```
 
 ## Database Schema
 
-Lihat file `schema.sql` untuk struktur lengkap tabel database (`users`, `notes`, `categories`, `tags`, `note_tag`).
+File `schema.sql` berisi struktur lengkap seluruh tabel: users, notes, categories, tags, dan note_tag.
 
 ## Deployment
 
-**URL Production**: `https://notes-api-production.up.railway.app`
+URL Production: https://notes-api-production-4a37.up.railway.app/
 
-Deploy menggunakan Railway dengan MySQL sebagai database.
-
-## Author
-
-Nama Kamu — [GitHub](https://github.com/username-kamu)
+Aplikasi di-deploy menggunakan Railway dengan MySQL sebagai database.
